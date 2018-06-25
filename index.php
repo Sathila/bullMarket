@@ -62,7 +62,7 @@
     <section class="section-padding gray-bg">
       <div class="container">
         <div class="section-header text-center">
-          <h2>Bluechips <span> Registered with Us</span></h2>
+          <h2>Trending <span> Companies </span></h2>
           <!-- <p></p> -->
         </div>
         <div class="row"> 
