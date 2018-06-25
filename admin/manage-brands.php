@@ -67,10 +67,10 @@ else{
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-md-12">
-								<h2 class="page-title">Manage Companiess</h2>
+								<h2 class="page-title">Manage Categories</h2>
 								<!-- Zero Configuration Table -->
 								<div class="panel panel-default">
-									<div class="panel-heading">Listed  Brands</div>
+									<div class="panel-heading">Listed Categories</div>
 									<div class="panel-body">
 										<?php if($error) { ?>
 											<div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> 
@@ -83,7 +83,7 @@ else{
 											<thead>
 												<tr>
 													<th>#</th>
-													<th>Company Name</th>
+													<th>Category Name</th>
 													<th>Creation Date</th>
 													<th>Updation date</th>										
 													<th>Action</th>
@@ -92,7 +92,7 @@ else{
 											<tfoot>
 												<tr>
 													<th>#</th>
-													<th>Company Name</th>
+													<th>Category Name</th>
 													<th>Creation Date</th>
 													<th>Updation date</th>										
 													<th>Action</th>
