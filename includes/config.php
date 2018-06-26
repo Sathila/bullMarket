@@ -4,7 +4,6 @@
     define('DB_USER','root');
     define('DB_PASS','');
     define('DB_NAME','carrental');
-
     try
     {
         $dbh = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME,DB_USER, DB_PASS,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
@@ -13,5 +12,15 @@
     {
         exit("Error: " . $e->getMessage());
     }
+    $server='localhost';
+     $username='root';
+      $password='';
+       $database='carrental';
+    try{
+        $connect = mysqli_connect($server, $username, $password, $database);
+    } catch (mysqli_sql_exception $ex) {
+        echo 'Error';
+    }
     
+
 ?>
