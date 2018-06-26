@@ -31,6 +31,7 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet"> 
   </head>
   <body>  
+  <p id="demo"></p>
     <!--Header-->
     <?php include('includes/header.php');?>
     <!-- /Header --> 
@@ -69,7 +70,7 @@
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="bluechips">
               <?php 
-              $sql = "SELECT tblvehicles.VehiclesTitle,tblbrands.BrandName,tblvehicles.PricePerDay,tblvehicles.FuelType,tblvehicles.ModelYear,tblvehicles.id,tblvehicles.SeatingCapacity,tblvehicles.VehiclesOverview,tblvehicles.Vimage1 from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand";
+              $sql = "SELECT tblcompany.VehiclesTitle,tblcategories.BrandName,tblcompany.PricePerDay,tblcompany.FuelType,tblcompany.ModelYear,tblcompany.id,tblcompany.SeatingCapacity,tblcompany.VehiclesOverview,tblcompany.Vimage1 from tblcompany join tblcategories on tblcategories.id=tblcompany.VehiclesBrand";
               $query = $dbh -> prepare($sql);
               $query->execute();
               $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -81,15 +82,13 @@
                 { ?>  
                   <div class="col-list-3">
                     <div class="recent-car-list">
-                      <div class="car-info-box"> <a href="vehical-details.php?vhid=<?php echo htmlentities($result->id);?>"><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1);?>" class="img-responsive" alt="image"></a>
+                      <div class="car-info-box"> <a href="stock-purchase.php?vhid=<?php echo htmlentities($result->id);?>"><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1);?>" class="img-responsive" alt="image"></a>
                         <ul>
-                          <li><i class="fa fa-car" aria-hidden="true"></i><?php echo htmlentities($result->FuelType);?></li>
                           <li><i class="fa fa-calendar" aria-hidden="true"></i><?php echo htmlentities($result->ModelYear);?> Model</li>
-                          <li><i class="fa fa-user" aria-hidden="true"></i><?php echo htmlentities($result->SeatingCapacity);?> seats</li>
                         </ul>
                       </div>
                       <div class="car-title-m">
-                        <h6><a href="vehical-details.php?vhid=<?php echo htmlentities($result->id);?>"><?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></a></h6>
+                        <h6><a href="stock-purchase.php?vhid=<?php echo htmlentities($result->id);?>"><?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></a></h6>
                         <span class="price">$<?php echo htmlentities($result->PricePerDay);?> /Day</span> 
                       </div>
                       <div class="inventory_info_m">
@@ -137,6 +136,7 @@
     <!--Slider-JS--> 
     <script src="assets/js/slick.min.js"></script> 
     <script src="assets/js/owl.carousel.min.js"></script>
+    <script type="text/javascript" src="assets/js/script.js"></script>
 
   </body>
 </html>
