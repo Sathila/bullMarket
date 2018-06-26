@@ -6,8 +6,42 @@ if(strlen($_SESSION['login'])==0)
   { 
 header('location:index.php');
 }
-else{
-?><!DOCTYPE HTML>
+else{	
+    if(isset($_POST['submit'])){
+      
+      $ModelYear=$_POST['ModelYear'];
+      $id=$_POST['id'];
+
+      $select = "SELECT ModelYear from tblcompany where id=:id";
+      $query_select = $dbh -> prepare($select);
+      $query_select -> bindParam(':id',$id,PDO::PARAM_STR);
+      $query_select ->execute();
+      $results=$query_select->fetchAll(PDO::FETCH_OBJ);
+      $cnt=1;
+      if($query_select->rowCount() > 0) {
+        foreach($results as $result) {
+          $stocks = $result->ModelYear;
+        }
+      }  
+
+      $stocks_left = $stocks - $ModelYear;
+
+      $sql="update tblcompany set ModelYear=:ModelYear where id=:id ";
+      $query = $dbh->prepare($sql);
+      $query->bindParam(':ModelYear',$stocks_left,PDO::PARAM_STR);
+      $query->bindParam(':id',$id,PDO::PARAM_STR);
+      $query->execute();
+      
+      $sql_purchase="update tblpurchases set stocks='0' where id=:id ";
+      $query_purchase = $dbh->prepare($sql_purchase);
+      $query_purchase->bindParam(':id',$id,PDO::PARAM_STR);
+      $query_purchase->execute();
+
+      $msg="Data updated successfully";
+      
+    }
+ ?>
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -15,7 +49,7 @@ else{
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="keywords" content="">
 <meta name="description" content="">
-<title>CarForYou - Responsive Car Dealer HTML5 Template</title>
+<title>BULL MARKET - My Stocks</title>
 <!--Bootstrap -->
 <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css">
 <!--Custome Style -->
@@ -30,15 +64,6 @@ else{
 <!--FontAwesome Font Style -->
 <link href="assets/css/font-awesome.min.css" rel="stylesheet">
 
-<!-- SWITCHER -->
-		<link rel="stylesheet" id="switcher-css" type="text/css" href="assets/switcher/css/switcher.css" media="all" />
-		<link rel="alternate stylesheet" type="text/css" href="assets/switcher/css/red.css" title="red" media="all" data-default-color="true" />
-		<link rel="alternate stylesheet" type="text/css" href="assets/switcher/css/orange.css" title="orange" media="all" />
-		<link rel="alternate stylesheet" type="text/css" href="assets/switcher/css/blue.css" title="blue" media="all" />
-		<link rel="alternate stylesheet" type="text/css" href="assets/switcher/css/pink.css" title="pink" media="all" />
-		<link rel="alternate stylesheet" type="text/css" href="assets/switcher/css/green.css" title="green" media="all" />
-		<link rel="alternate stylesheet" type="text/css" href="assets/switcher/css/purple.css" title="purple" media="all" />
-        
 <!-- Fav and touch icons -->
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/images/favicon-icon/apple-touch-icon-144-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/images/favicon-icon/apple-touch-icon-114-precomposed.html">
@@ -56,10 +81,6 @@ else{
 </head>
 <body>
 
-<!-- Start Switcher -->
-<?php include('includes/colorswitcher.php');?>
-<!-- /Switcher -->  
-        
 <!--Header-->
 <?php include('includes/header.php');?>
 <!--Page Header-->
@@ -70,11 +91,11 @@ else{
   <div class="container">
     <div class="page-header_wrap">
       <div class="page-heading">
-        <h1>My Booking</h1>
+        <h1>My Stocks</h1>
       </div>
       <ul class="coustom-breadcrumb">
         <li><a href="#">Home</a></li>
-        <li>My Booking</li>
+        <li>My Stocks</li>
       </ul>
     </div>
   </div>
@@ -97,28 +118,22 @@ foreach($results as $result)
 { ?>
 <section class="user_profile inner_pages">
   <div class="container">
-    <div class="user_profile_info gray-bg padding_4x4_40">
-      <div class="upload_user_logo"> <img src="assets/images/dealer-logo.jpg" alt="image">
-      </div>
-
-      <div class="dealer_info">
-        <h5><?php echo htmlentities($result->FullName);?></h5>
-        <p><?php echo htmlentities($result->Address);?><br>
-          <?php echo htmlentities($result->City);?>&nbsp;<?php echo htmlentities($result->Country); }}?></p>
-      </div>
-    </div>
+          <?php }}?>
     <div class="row">
       <div class="col-md-3 col-sm-3">
        <?php include('includes/sidebar.php');?>
    
       <div class="col-md-6 col-sm-8">
         <div class="profile_wrap">
-          <h5 class="uppercase underline">My Booikngs </h5>
+          <h5 class="uppercase underline">My Stocks </h5>
+		  <form method="post" class="form-horizontal" enctype="multipart/form-data">
           <div class="my_vehicles_list">
             <ul class="vehicle_listing">
 <?php 
 $useremail=$_SESSION['login'];
- $sql = "SELECT tblvehicles.Vimage1 as Vimage1,tblvehicles.VehiclesTitle,tblvehicles.id as vid,tblbrands.BrandName,tblbooking.FromDate,tblbooking.ToDate,tblbooking.message,tblbooking.Status  from tblbooking join tblvehicles on tblbooking.VehicleId=tblvehicles.id join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand where tblbooking.userEmail=:useremail";
+$sql = "SELECT tblcompany.Vimage1 as Vimage1,tblcompany.VehiclesTitle,tblcompany.id as vid,tblcategories.BrandName,tblpurchases.FromDate,
+tblpurchases.ToDate,tblpurchases.stocks,tblpurchases.Status from tblpurchases join tblcompany on tblpurchases.CompanyId=tblcompany.id 
+join tblcategories on tblcategories.id=tblcompany.VehiclesBrand where tblpurchases.userEmail=:useremail";
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':useremail', $useremail, PDO::PARAM_STR);
 $query->execute();
@@ -130,36 +145,24 @@ foreach($results as $result)
 {  ?>
 
 <li>
-                <div class="vehicle_img"> <a href="vehical-details.php?vhid=<?php echo htmlentities($result->vid);?>""><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1);?>" alt="image"></a> </div>
+
+		<input type="hidden" name="id" id="id" value="<?php echo htmlentities($result->vid); ?>">
+                <div class="vehicle_img"> <a href="stock-purchase.php?vhid=<?php echo htmlentities($result->vid);?>""><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1);?>" alt="image"></a> </div>
                 <div class="vehicle_title">
-                  <h6><a href="vehical-details.php?vhid=<?php echo htmlentities($result->vid);?>""> <?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></a></h6>
+                  <h6><a href="stock-purchase.php?vhid=<?php echo htmlentities($result->vid);?>""> <?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></a></h6>
                   <p><b>From Date:</b> <?php echo htmlentities($result->FromDate);?><br /> <b>To Date:</b> <?php echo htmlentities($result->ToDate);?></p>
                 </div>
-                <?php if($result->Status==1)
-                { ?>
-                <div class="vehicle_status"> <a href="#" class="btn outline btn-xs active-btn">Confirmed</a>
-                           <div class="clearfix"></div>
-        </div>
-
-              <?php } else if($result->Status==2) { ?>
- <div class="vehicle_status"> <a href="#" class="btn outline btn-xs">Cancelled</a>
-            <div class="clearfix"></div>
-        </div>
-             
-
-
-                <?php } else { ?>
- <div class="vehicle_status"> <a href="#" class="btn outline btn-xs">Not Confirm yet</a>
-            <div class="clearfix"></div>
-        </div>
-                <?php } ?>
-       <div style="float: left"><p><b>Message:</b> <?php echo htmlentities($result->message);?> </p></div>
+       <div style="float: left"><p><b>Stocks:</b> <?php echo htmlentities($result->stocks); ?> </p></div>
+		<input type="hidden" name="ModelYear" id="ModelYear" value="<?php echo htmlentities($result->stocks); ?>">
               </li>
               <?php }} ?>
              
-         
+         <div class="vehicle_status"> <button class="btn btn-primary" name="submit" type="submit">Sell Stocks</button>
+            <div class="clearfix"></div>
+        </div>
             </ul>
           </div>
+		  </form>
         </div>
       </div>
     </div>
